@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Tuple
 
 
 @dataclass(eq=True, order=True, frozen=True)
@@ -9,7 +8,7 @@ class Resources:
     gpu_count: int
 
 
-@dataclass(eq=True, order=True, frozen=True)
+@dataclass(eq=True, order=True, frozen=False)
 class Task:
     id: int
     priority: int
@@ -19,6 +18,7 @@ class Task:
 
 class DuplicateIdException(Exception):
     pass
+
 
 class TaskQueue:
 
@@ -33,7 +33,7 @@ class TaskQueue:
 
         self.queue.append(task)
 
-    def get_task(self, available_resources: Resources) -> Tuple[Task, None]:
+    def get_task(self, available_resources: Resources) -> [Task, None]:
         if not self.queue:
             return None
 
