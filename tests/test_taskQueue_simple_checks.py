@@ -2,7 +2,8 @@ from unittest import TestCase
 from TaskQueue import TaskQueue, Resources, Task, DuplicateIdException
 
 
-class TestTaskQueue(TestCase):
+class TestTaskQueueSimpleChecks(TestCase):
+
     def test_get_task_from_empty_q(self):
         q = TaskQueue()
         r = Resources(1,1,1)

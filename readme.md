@@ -40,3 +40,4 @@ class TaskQueue:
 - After task is returned in get_task function - it removed from queue.
 - Task.id field is unique.
 - If we have multiple the same tasks matching criterion - first found task will be returned.
+- Highest priority (task will be returned first) means higher integer value. 

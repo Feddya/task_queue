@@ -1,14 +1,15 @@
 from dataclasses import dataclass
 from typing import Tuple
 
-@dataclass
+
+@dataclass(eq=True, order=True, frozen=True)
 class Resources:
     ram: int
     cpu_cores: int
     gpu_count: int
 
 
-@dataclass
+@dataclass(eq=True, order=True, frozen=True)
 class Task:
     id: int
     priority: int
@@ -36,4 +37,10 @@ class TaskQueue:
         if not self.queue:
             return None
 
-        pass
+        sq = sorted(self.queue, key=lambda t: t.priority, reverse=True)
+        for t in sq:
+            if t.resources <= available_resources:
+                self.queue.remove(t)
+                return t
+
+        return None
