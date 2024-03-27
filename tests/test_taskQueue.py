@@ -10,11 +10,11 @@ class TestTaskQueue_simpleChecks(TestCase):
         q.add_task(t)
 
         try:
-            self.assertEqual(len(q.queue), 1, "task should be added correctly")
+            self.assertEqual(q.get_queue_length(), 1, "task should be added correctly")
 
             r = q.get_task(Resources(1,1,1))
             self.assertIsNone(r, "should return None since there is no matching task in queue")
-            self.assertEqual(len(q.queue), 1, "task should not be removed")
+            self.assertEqual(q.get_queue_length(), 1, "task should not be removed")
         except:
             self.fail("should not throw exceptions")
 
@@ -25,11 +25,11 @@ class TestTaskQueue_simpleChecks(TestCase):
         q.add_task(t)
 
         try:
-            self.assertEqual(len(q.queue), 1, "task should be added correctly")
+            self.assertEqual(q.get_queue_length(), 1, "task should be added correctly")
 
             r = q.get_task(Resources(1,1,1))
             self.assertEqual(r, t, "should return previously added task")
-            self.assertEqual(len(q.queue), 0, "task should be removed")
+            self.assertEqual(q.get_queue_length(), 0, "task should be removed")
         except:
             self.fail("should not throw exceptions")
 
@@ -42,11 +42,11 @@ class TestTaskQueue_simpleChecks(TestCase):
         q.add_task(t2)
 
         try:
-            self.assertEqual(len(q.queue), 2, "tasks should be added correctly")
+            self.assertEqual(q.get_queue_length(), 2, "tasks should be added correctly")
 
             r = q.get_task(Resources(1,1,1))
             self.assertEqual(r, t2, "should return task with highest priority")
-            self.assertEqual(len(q.queue), 1, "task should be removed")
+            self.assertEqual(q.get_queue_length(), 1, "task should be removed")
         except:
             self.fail("should not throw exceptions")
 
@@ -58,15 +58,15 @@ class TestTaskQueue_simpleChecks(TestCase):
         q.add_task(t2)
 
         try:
-            self.assertEqual(len(q.queue), 2, "tasks should be added correctly")
+            self.assertEqual(q.get_queue_length(), 2, "tasks should be added correctly")
 
             r = q.get_task(Resources(1,1,1))
             self.assertEqual(r, t2, "should return task with highest priority")
-            self.assertEqual(len(q.queue), 1, "task should be removed")
+            self.assertEqual(q.get_queue_length(), 1, "task should be removed")
 
             r = q.get_task(Resources(1,1,1))
             self.assertEqual(r, t1, "should return task with negative priority")
-            self.assertEqual(len(q.queue), 0, "task should be removed")
+            self.assertEqual(q.get_queue_length(), 0, "task should be removed")
 
         except:
             self.fail("should not throw exceptions")

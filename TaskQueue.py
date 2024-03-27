@@ -23,24 +23,27 @@ class DuplicateIdException(Exception):
 class TaskQueue:
 
     def __init__(self):
-        self.queue = []
+        self._queue = []
+
+    def get_queue_length(self):
+        return len(self._queue)
 
     def add_task(self, task: Task):
 
-        for t in self.queue:
+        for t in self._queue:
             if t.id == task.id:
                 raise DuplicateIdException(f"duplicate id {task.id} found in add_task")
 
-        self.queue.append(task)
+        self._queue.append(task)
 
     def get_task(self, available_resources: Resources) -> [Task, None]:
-        if not self.queue:
+        if not self._queue:
             return None
 
-        sq = sorted(self.queue, key=lambda t: t.priority, reverse=True)
+        sq = sorted(self._queue, key=lambda t: t.priority, reverse=True)
         for t in sq:
             if t.resources <= available_resources:
-                self.queue.remove(t)
+                self._queue.remove(t)
                 return t
 
         return None
