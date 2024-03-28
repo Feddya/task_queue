@@ -8,32 +8,30 @@ class TestTaskQueueWorkChecksList(TestCase):
         self.q = TaskQueue()
 
     def test_fail_to_find_task(self):
-        t = Task(1,1, Resources(100, 100, 100), "content", "result")
+        t = Task(1, 1, Resources(100, 100, 100), "content", "result")
         self.q.add_task(t)
 
         try:
             self.assertEqual(self.q.get_queue_length(), 1, "task should be added correctly")
 
-            r = self.q.get_task(Resources(1,1,1))
+            r = self.q.get_task(Resources(1, 1, 1))
             self.assertIsNone(r, "should return None since there is no matching task in queue")
             self.assertEqual(self.q.get_queue_length(), 1, "task should not be removed")
         except:
             self.fail("should not throw exceptions")
 
-
     def test_find_simple(self):
-        t = Task(1,1, Resources(1, 1, 1), "content", "result")
+        t = Task(1, 1, Resources(1, 1, 1), "content", "result")
         self.q.add_task(t)
 
         try:
             self.assertEqual(self.q.get_queue_length(), 1, "task should be added correctly")
 
-            r = self.q.get_task(Resources(1,1,1))
+            r = self.q.get_task(Resources(1, 1, 1))
             self.assertEqual(r, t, "should return previously added task")
             self.assertEqual(self.q.get_queue_length(), 0, "task should be removed")
         except:
             self.fail("should not throw exceptions")
-
 
     def test_find_multiple_priorities(self):
         t1 = Task(1, 1, Resources(1, 1, 1), "content", "result")
@@ -44,7 +42,7 @@ class TestTaskQueueWorkChecksList(TestCase):
         try:
             self.assertEqual(self.q.get_queue_length(), 2, "tasks should be added correctly")
 
-            r = self.q.get_task(Resources(1,1,1))
+            r = self.q.get_task(Resources(1, 1, 1))
             self.assertEqual(r, t2, "should return task with highest priority")
             self.assertEqual(self.q.get_queue_length(), 1, "task should be removed")
         except:
@@ -59,11 +57,11 @@ class TestTaskQueueWorkChecksList(TestCase):
         try:
             self.assertEqual(self.q.get_queue_length(), 2, "tasks should be added correctly")
 
-            r = self.q.get_task(Resources(1,1,1))
+            r = self.q.get_task(Resources(1, 1, 1))
             self.assertEqual(r, t2, "should return task with highest priority")
             self.assertEqual(self.q.get_queue_length(), 1, "task should be removed")
 
-            r = self.q.get_task(Resources(1,1,1))
+            r = self.q.get_task(Resources(1, 1, 1))
             self.assertEqual(r, t1, "should return task with negative priority")
             self.assertEqual(self.q.get_queue_length(), 0, "task should be removed")
 
@@ -81,11 +79,11 @@ class TestTaskQueueWorkChecksList(TestCase):
         try:
             self.assertEqual(self.q.get_queue_length(), 3, "tasks should be added correctly")
 
-            r = self.q.get_task(Resources(1,1,1))
+            r = self.q.get_task(Resources(1, 1, 1))
             self.assertNotEqual(r, t3, "should return any found task with priority == 1, so not t3")
             self.assertEqual(self.q.get_queue_length(), 2, "task should be removed")
 
-            r = self.q.get_task(Resources(1,1,1))
+            r = self.q.get_task(Resources(1, 1, 1))
             self.assertNotEqual(r, t3, "should return another task with priority == 1")
             self.assertEqual(self.q.get_queue_length(), 1, "task should be removed")
 

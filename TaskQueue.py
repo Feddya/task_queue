@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from collections import defaultdict
 
+
 @dataclass(eq=True, order=True, frozen=True)
 class Resources:
     ram: int
@@ -41,6 +42,20 @@ class QueueImplementationBase(ABC):
         pass
 
 
+"""
+Basic implementation using list
+
+Complexity:
+    add_task:
+        average:    O(n) search for existing id + O(n) insert task = O(n)
+        worst:      O(n) search for existing id + O(n) insert task = O(n)
+        
+    get_task:
+        average:	O(nlogn) tim sort + O(n) search + O(n) remove task = O(n)
+        worst:	    O(nlogn) tim sort + O(n) search + O(n) remove = O(nlogn)
+"""
+
+
 class ListQueue(QueueImplementationBase):
 
     def __init__(self):
@@ -69,6 +84,42 @@ class ListQueue(QueueImplementationBase):
                 return t
 
         return None
+
+
+"""
+Advanced implementation using multiple dicts
+
+Complexity:
+    add_task:
+        average:    O(1) search + O(1) insert = O(1)
+        
+        worst:	    O(n) search + O(n) insert = O(n)
+        
+    get_task: (X - number of params to search, Y - number of found items matching one criterion, Z - number of items matching all criterion)
+        average:    
+            find task:      O(n) * X  [iteration by X dicts] + 
+                            O(1) * Y  [insert Y items into sets] +
+                            O(min(Ys))  [intersect Y sets] + 
+                            O(Z)  [find item with highest priority]
+                            = O(n)
+                            
+            remove task:    O(1) * X * n  [get item by key in X dicts and remove from list] + 
+                            O(1)  [remove from dict by id]
+                            = O(n)
+            = O(n) total
+            
+        worst:
+            find task:      O(n) * X  [iteration by X dicts] +
+                            O(n) * Y  [insert Y items into sets] + 
+                            O(Y^X)    [intersect X sets of Y items each] + 
+                            O(Z)  [find item with highest priority]
+                            = O(n)
+                            
+            remove task:    O(n) * X * n  [get item by key in X dicts and remove from list] +
+                            O(n)  [remove from dict by id]
+                            = O(n^2)	    
+    
+"""
 
 
 class DictQueue(QueueImplementationBase):
@@ -147,18 +198,18 @@ class DictQueue(QueueImplementationBase):
         return ret
 
     @staticmethod
-    def _remove_from_dict_by_value(collection: dict, key:int, value: int):
+    def _remove_from_dict_by_value(collection: dict, key: int, value: int) -> None:
         lst = collection[key]
         lst.remove(value)
 
 
 class TaskQueue:
 
-    def __init__(self, queueImpl=None):
-        if not queueImpl:
+    def __init__(self, queue_impl=None):
+        if not queue_impl:
             self._queue = ListQueue()
         else:
-            self._queue = queueImpl
+            self._queue = queue_impl
 
     def get_queue_length(self) -> int:
         return self._queue.get_queue_length()
